@@ -20,6 +20,36 @@ DATA = {
 }
 
 # Напишите ваш обработчик. Используйте DATA как источник данных
+def calculate_views(request, recipes_list):
+    template_name = 'calculator/index.html'
+    if recipes_list in DATA:
+        data = DATA[recipes_list]
+        servings = request.GET.get('servings', None)
+        if servings:
+           result = dict()
+           for key, value in data.items():
+               news_value = value * servings
+               result[key] = news_value
+           context = {
+                'recipes_list': recipes_list,
+                'recipe': result,
+        }
+        else:
+            context ={
+                'recipes_list': recipes_list,
+                'recipe': data,
+            }
+    else:
+        context = None
+
+    return render(request, template_name, context=context)
+def all_home_view(request):
+    template_name = 'home/home.html'
+    all_recipes = list(DATA.keys())
+    context = {
+        'all_recipes': all_recipes,
+    }
+    return render(request, template_name, context=context)
 # Результат - render(request, 'calculator/index.html', context)
 # В качестве контекста должен быть передан словарь с рецептом:
 # context = {
